@@ -1,0 +1,116 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\title{Reward Function Notes for the MiniGrid RLHF Benchmark}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{What the Current Code Is Actually Doing}
+
+The implemented reward in the notebook is
+\[
+R_t = R_{\mathrm{env}}(s_t, a_t, s_{t+1}) + w_t \, r_h(t),
+\]
+where:
+\begin{itemize}
+\item $R_{\mathrm{env}}$ is the native MiniGrid terminal reward,
+\item $r_h(t) \in \{+0.1, -0.1\}$ is the synthetic human feedback,
+\item $w_t$ is a trust weight computed from $\alpha$ and $\beta$.
+\end{itemize}
+
+The synthetic human does not directly inspect the full task objective. Instead, it checks whether a potential increased:
+\[
+\phi(s) = -\mathrm{ManhattanDistance}(\mathrm{agent}, \mathrm{goal}).
+\]
+
+If the agent moves closer to the goal, the human emits $+0.1$. Otherwise it emits $-0.1$. This means the human channel is a dense directional shaping signal, not the true task reward.
+
+\section*{Why the Current Bayesian Trust Equation Does Not Make Sense}
+
+The intended trust score is
+\[
+w_t = \frac{\alpha_t}{\alpha_t + \beta_t}.
+\]
+
+That form is reasonable only if both parameters stay positive and disagreements increase evidence against the teacher. In the current implementation, agreement does
+\[
+\alpha \leftarrow \alpha + 0.1,
+\]
+but disagreement does
+\[
+\beta \leftarrow \beta - 0.5.
+\]
+
+This breaks the interpretation. A Beta-style trust model requires $\alpha > 0$ and $\beta > 0$. If $\beta$ is reduced on disagreement, then:
+\begin{itemize}
+\item $w_t$ can become larger than $1$,
+\item $w_t$ can become negative,
+\item the denominator $\alpha + \beta$ can approach $0$ and become numerically unstable,
+\item the human reward can be amplified or sign-flipped instead of merely muted.
+\end{itemize}
+
+So the current code is not behaving like Bayesian trust weighting. It is acting as an unstable scaling factor on top of a noisy shaping reward.
+
+\section*{Additional Conceptual Mismatches}
+
+\begin{itemize}
+\item The prose says Euclidean distance, but the code uses Manhattan distance.
+\item The agreement rule treats actual progress $\leq 0$ as agreement with negative feedback, so no progress and moving away are merged into the same case.
+\item The human signal is about local movement direction, while the environment reward is about eventual task completion. These are related, but they are not the same objective.
+\end{itemize}
+
+\section*{What Is Appropriate for This Project}
+
+This project is a clean benchmark for noisy external feedback in a sparse-reward environment. Because of that, the most appropriate reward design is still a bounded trust-weighted shaping term:
+\[
+R_t = R_{\mathrm{env}}(s_t, a_t, s_{t+1}) + \eta \, w_t \, r_h(t),
+\]
+with
+\[
+w_t = \frac{\alpha_t}{\alpha_t + \beta_t},
+\qquad
+\alpha_t > 0,
+\qquad
+\beta_t > 0,
+\qquad
+0 \leq w_t \leq 1,
+\]
+and updates of the form
+\[
+\alpha_{t+1} = \alpha_t + c_{\mathrm{agree}},
+\qquad
+\beta_{t+1} = \beta_t + c_{\mathrm{disagree}},
+\]
+where $c_{\mathrm{agree}} > 0$ and $c_{\mathrm{disagree}} > 0$.
+
+This preserves the meaning of trust: agreement increases trust, disagreement decreases trust, and the human channel is attenuated rather than allowed to explode.
+
+\section*{Best Formulation for Scientific Rigor}
+
+If the goal is to compare reward-fusion methods fairly, the best mathematical form is potential-based shaping:
+\[
+R_t = R_{\mathrm{env}}(s_t, a_t, s_{t+1}) + \eta \, w_t \, \bigl(\gamma \Phi(s_{t+1}) - \Phi(s_t)\bigr),
+\]
+where $\Phi$ is the same goal-distance potential already used for the physics check.
+
+This is more principled than directly adding $\pm 0.1$ because it ties the shaping term to state progress instead of a hard-coded binary reward. It also keeps the project focused on the actual research question: how much should the agent trust an unreliable teacher?
+
+\section*{Why the Peek-Ahead Equation Is Not the Right Next Step}
+
+The proposed equation with a peek-ahead human return adds imagined multi-step planning and value bootstrapping. That is a different project. It changes the benchmark from robust reward integration under teacher noise into lookahead-augmented reward estimation.
+
+That may be interesting later, but it is not the cleanest next formulation for the current notebook. Right now, the cleaner research move is to keep the reward structure simple and make the trust update mathematically valid.
+
+\section*{Bottom Line}
+
+The current reward combination idea is directionally correct: use the environment reward as the ground-truth task signal and use human feedback as a trust-weighted shaping term.
+
+What needs to change is not the overall structure, but the trust-update math. For this project, the appropriate equation is a bounded trust-weighted shaping reward, ideally with a valid positive update rule for $(\alpha, \beta)$ and, if desired, a potential-based shaping term instead of raw $\pm 0.1$ feedback.
+
+\end{document}
