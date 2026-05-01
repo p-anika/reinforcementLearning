@@ -22,18 +22,18 @@ import pandas as pd
 import gymnasium as gym
 from minigrid.wrappers import FlatObsWrapper
 
-from env.wrappers import ResearchWrapper, DiscreteToBoxWrapper
+from env.wrappers import ResearchWrapper
 
 
 # ─── Evaluation ───────────────────────────────────────────────────────────────
 
-def evaluate_agent(model, env_id, human, mode, n_episodes, alpha_init, beta_init, agent_name="PPO"):
+def evaluate_agent(model, env_id, human, mode, n_episodes, alpha_init, beta_init):
     """
     Run n_episodes deterministic rollouts with a trained model.
 
     Creates a fresh environment independent of the training environment
-    to avoid any state leakage. Replicates all wrappers from training,
-    including DiscreteToBoxWrapper for SAC.
+    to avoid any state leakage. Both PPO and DQN use MiniGrid's native
+    Discrete action space, so no action-space adapter is needed.
 
     Success criterion: terminated=True AND info["r_env"] > 0.0
     (i.e. the agent reached the goal, not just timed out or died to lava).
@@ -49,7 +49,6 @@ def evaluate_agent(model, env_id, human, mode, n_episodes, alpha_init, beta_init
     n_episodes  : int     number of evaluation episodes
     alpha_init  : float   Bayesian prior alpha
     beta_init   : float   Bayesian prior beta
-    agent_name  : str     "PPO" or "SAC" — determines whether DiscreteToBoxWrapper is applied
 
     Returns
     -------
@@ -64,9 +63,6 @@ def evaluate_agent(model, env_id, human, mode, n_episodes, alpha_init, beta_init
         eval_env, human, mode=mode, env_id=env_id,
         alpha_init=alpha_init, beta_init=beta_init
     )
-    # Apply action-space adapter for SAC (must match the training wrapper stack)
-    if agent_name == "SAC":
-        eval_env = DiscreteToBoxWrapper(eval_env)
 
     episode_rewards = []
     successes = 0

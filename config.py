@@ -30,10 +30,10 @@ ENVIRONMENTS = {
 }
 
 # ─── RL Agents ────────────────────────────────────────────────────────────────
-# SAC note: MiniGrid uses Discrete(7) actions. agents/factory.py handles the
-# conversion via DiscreteToBoxWrapper when SAC is selected.
+# DQN is chosen over SAC because MiniGrid uses Discrete(7) actions — DQN
+# handles discrete spaces natively, whereas SAC requires a continuous adapter.
 
-AGENTS = ["PPO", "SAC"]
+AGENTS = ["PPO", "DQN"]
 
 # ─── Reward Modes ─────────────────────────────────────────────────────────────
 # These are the three conditions compared in every experiment.

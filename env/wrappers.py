@@ -3,9 +3,8 @@ env/wrappers.py
 ---------------
 Environment creation and reward-integration wrappers.
 
-make_env()        — build a FlatObsWrapper-wrapped MiniGrid environment
-ResearchWrapper   — integrate human feedback into the reward signal
-DiscreteToBoxWrapper — adapt MiniGrid's Discrete action space for SAC
+make_env()       — build a FlatObsWrapper-wrapped MiniGrid environment
+ResearchWrapper  — integrate human feedback into the reward signal
 
 The ResearchWrapper is the core of the research framework. It supports
 three reward modes that are compared against each other:
@@ -17,9 +16,7 @@ three reward modes that are compared against each other:
 Total reward equation: r_total = r_env + (w × r_human)
 """
 
-import numpy as np
 import gymnasium as gym
-from gymnasium import spaces
 from minigrid.wrappers import FlatObsWrapper
 
 from reward_filter.bayesian import update_bayesian_trust, fresh_history
@@ -39,34 +36,6 @@ def make_env(env_id):
     env = gym.make(env_id, render_mode="rgb_array")
     env = FlatObsWrapper(env)
     return env
-
-
-# ─── Action-Space Adapter (for SAC) ───────────────────────────────────────────
-
-class DiscreteToBoxWrapper(gym.ActionWrapper):
-    """
-    Adapts a Discrete(n) action space to a continuous Box(n,) space.
-
-    SB3's SAC requires a continuous Box action space, but MiniGrid uses
-    Discrete(7). This wrapper converts the environment's action space so SAC
-    can output a 7-dimensional vector; the highest-valued dimension is taken
-    as the discrete action (argmax selection).
-
-    This is the standard approach for applying continuous-action algorithms
-    to discrete-action environments.
-
-    Stack position: outermost wrapper (wraps ResearchWrapper).
-    """
-
-    def __init__(self, env):
-        super().__init__(env)
-        n = env.action_space.n
-        # Replace Discrete(n) with a Box in [-1, 1]^n
-        self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(n,), dtype=np.float32)
-
-    def action(self, action):
-        """Convert continuous vector → discrete integer via argmax."""
-        return int(np.argmax(action))
 
 
 # ─── Research Wrapper ──────────────────────────────────────────────────────────

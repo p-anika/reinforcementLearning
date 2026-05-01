@@ -52,7 +52,7 @@ def parse_args():
     )
     parser.add_argument(
         "--agents", nargs="+", default=None,
-        help="Agents to test (default: all in config.AGENTS). E.g. --agents PPO SAC"
+        help="Agents to test (default: all in config.AGENTS). E.g. --agents PPO DQN"
     )
     parser.add_argument(
         "--envs", nargs="+", default=None,
@@ -142,7 +142,6 @@ def main():
             beta_init=config.REWARD["beta_init"],
         )
 
-        # make_agent handles SAC's DiscreteToBoxWrapper and returns updated env
         model, train_env = make_agent(agent_name, train_env, seed)
 
         # ── Train ─────────────────────────────────────────────────────────────
@@ -159,7 +158,6 @@ def main():
             n_episodes=config.TRAINING["eval_episodes"],
             alpha_init=config.REWARD["alpha_init"],
             beta_init=config.REWARD["beta_init"],
-            agent_name=agent_name,
         )
 
         # ── Record result ─────────────────────────────────────────────────────
