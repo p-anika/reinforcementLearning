@@ -1,0 +1,40 @@
+SUCCESS RATE (mean over seeds)
+================================================================================
+mode                                          sparse  naive  bayesian
+agent env_id                  human                                  
+DQN   MiniGrid-DoorKey-8x8-v0 Adversarial      0.000  0.000     0.000
+                              DistanceNoise    0.000  0.000     0.000
+                              Fatigue          0.000  0.000     0.000
+                              Realistic        0.000  0.000     0.000
+                              StochasticHigh   0.000  0.000     0.000
+                              StochasticLow    0.000  0.000     0.000
+      MiniGrid-Empty-8x8-v0   Adversarial      0.000  0.000     0.000
+                              DistanceNoise    0.000  0.667     0.333
+                              Fatigue          0.000  0.333     0.000
+                              Realistic        0.000  0.333     0.333
+                              StochasticHigh   0.000  0.000     0.000
+                              StochasticLow    0.000  0.333     0.667
+      MiniGrid-LavaGapS7-v0   Adversarial      0.000  0.000     0.000
+                              DistanceNoise    0.000  0.000     0.100
+                              Fatigue          0.000  0.083     0.200
+                              Realistic        0.000  0.183     0.067
+                              StochasticHigh   0.000  0.000     0.000
+                              StochasticLow    0.000  0.083     0.067
+PPO   MiniGrid-DoorKey-8x8-v0 Adversarial      0.000  0.000     0.000
+                              DistanceNoise    0.000  0.000     0.000
+                              Fatigue          0.000  0.000     0.000
+                              Realistic        0.000  0.000     0.000
+                              StochasticHigh   0.000  0.000     0.000
+                              StochasticLow    0.000  0.000     0.000
+      MiniGrid-Empty-8x8-v0   Adversarial      0.000  0.000     0.000
+                              DistanceNoise    0.333  0.333     0.333
+                              Fatigue          0.333  0.333     0.667
+                              Realistic        0.333  0.667     1.000
+                              StochasticHigh   0.000  0.000     0.000
+                              StochasticLow    0.000  0.667     0.667
+      MiniGrid-LavaGapS7-v0   Adversarial      0.067  0.000     0.000
+                              DistanceNoise    0.050  0.000     0.000
+                              Fatigue          0.000  0.000     0.000
+                              Realistic        0.000  0.000     0.000
+                              StochasticHigh   0.000  0.000     0.000
+                              StochasticLow    0.000  0.000     0.000

@@ -27,6 +27,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import seaborn as sns
+import glob
 
 from training.evaluator import load_results
 
@@ -82,6 +84,144 @@ def save_summary_table(table, output_dir):
     print("\n─── SUCCESS RATE TABLE ───────────────────────────────────────────")
     print(table.to_string(float_format="{:.3f}".format))
 
+# ─── Poster Visuals ────────────────────────────────────────────────────────
+
+
+def save_poster_table(df, output_dir):
+    """
+    Creates a simplified, high-impact table for the Empty environment.
+    This focuses on the 'working' case to explain the Bayesian advantage.
+    """
+    # Filter for the most representative agent and environment
+    poster_df = df[(df["env_id"] == "MiniGrid-Empty-8x8-v0") & (df["agent"] == "PPO")]
+    
+    table = poster_df.pivot_table(
+        index="human",
+        columns="mode",
+        values="success_rate",
+        aggfunc="mean"
+    )
+    
+    # Reorder and clean up names for the poster
+    col_order = [c for c in ["sparse", "naive", "bayesian"] if c in table.columns]
+    table = table[col_order]
+    
+    path_csv = os.path.join(output_dir, "poster_simplified_table.csv")
+    table.to_csv(path_csv)
+    
+    print(f"Poster table saved  → {path_csv}")
+    return table
+
+def plot_poster_visuals(df, output_dir):
+    """
+    Generates the two key visuals for the center of the poster:
+    1. The 'Robustness' Bar Chart (PPO on Empty Env)
+    2. The 'Agent Reliability' Heatmap (Bayesian mode across all envs)
+    """
+    # Set global style for posters (large fonts, clean background)
+    sns.set_theme(style="whitegrid", context="talk")
+    
+    # 1. Bar Chart: Robustness to Noise
+    # Focusing on PPO and the Empty environment where feedback is most critical
+    plt.figure(figsize=(10, 6))
+    subset = df[(df["env_id"] == "MiniGrid-Empty-8x8-v0") & (df["agent"] == "PPO")]
+    
+    # Standardize mode names and colors
+    palette = {"sparse": "#95a5a6", "naive": "#e67e22", "bayesian": "#8e44ad"}
+    
+    ax = sns.barplot(
+        data=subset, x="human", y="success_rate", hue="mode",
+        palette=palette, errorbar="sd", capsize=.1
+    )
+    
+    plt.title("PPO Success Rate: Resilience to Teacher Noise", pad=20)
+    plt.ylabel("Success Rate (Mean ± SD)")
+    plt.xlabel("Human Teacher Profile")
+    plt.ylim(0, 1.1)
+    plt.legend(title="Reward Mode", bbox_to_anchor=(1.05, 1), loc='upper left')
+    
+    path_bar = os.path.join(output_dir, "poster_bar_robustness.png")
+    plt.savefig(path_bar, dpi=300, bbox_inches="tight")
+    plt.close()
+
+    # 2. Heatmap: Cross-Environment Performance
+    # Showing where the Bayesian filter 'unlocks' new environments
+    plt.figure(figsize=(10, 5))
+    
+    # Focus on Bayesian performance to show generalizability
+    heat_data = df[df["mode"] == "bayesian"].pivot_table(
+        index="human", 
+        columns="env_id", 
+        values="success_rate", 
+        aggfunc="mean"
+    )
+    
+    sns.heatmap(heat_data, annot=True, cmap="YlGnBu", cbar_kws={'label': 'Success Rate'})
+    plt.title("Bayesian Filter Performance Heatmap", pad=20)
+    plt.xlabel("Environment ID")
+    plt.ylabel("Human Teacher Profile")
+    
+    path_heat = os.path.join(output_dir, "poster_heatmap_bayesian.png")
+    plt.savefig(path_heat, dpi=300, bbox_inches="tight")
+    plt.close()
+    
+    print(f"Poster bar chart   → {path_bar}")
+    print(f"Poster heatmap     → {path_heat}")
+
+
+def plot_loss_curves_simplified(results_dir, output_dir):
+    """
+    Simplifies 100+ curves into one clear comparison plot.
+    Groups by 'mode' and shows mean loss + standard deviation.
+    """
+   
+    # 1. Load all .npy files into a structured list
+    curves_dir = os.path.join(results_dir, "curves")
+    loss_files = glob.glob(os.path.join(curves_dir, "*_loss.npy"))
+    
+    all_data = []
+    for f in loss_files:
+        mode = "bayesian" if "bayesian" in f else "naive" if "naive" in f else "sparse"
+        data = np.load(f)
+        # We normalize length because some runs might have slightly different update counts
+        all_data.append({"mode": mode, "loss": data})
+
+    # 2. Plotting
+    plt.figure(figsize=(10, 5))
+    sns.set_theme(style="whitegrid")
+    colors = {"sparse": "grey", "naive": "orange", "bayesian": "purple"}
+
+    for mode in ["sparse", "naive", "bayesian"]:
+        mode_losses = [d["loss"] for d in all_data if d["mode"] == mode]
+        if not mode_losses: continue
+
+        # Find minimum length to truncate for averaging
+        min_len = min(len(l) for l in mode_losses)
+        truncated_losses = np.array([l[:min_len] for l in mode_losses])
+        
+        mean_loss = np.mean(truncated_losses, axis=0)
+
+        if np.isnan(mean_loss).all():
+            print(f"Warning: All loss values for {mode} are NaN. Training likely failed.")
+            continue
+
+        std_loss = np.std(truncated_losses, axis=0)
+        steps = np.arange(len(mean_loss))
+
+        plt.plot(steps, mean_loss, label=f"{mode.capitalize()} (Mean)", color=colors[mode], lw=2)
+        plt.fill_between(steps, mean_loss - std_loss, mean_loss + std_loss, 
+                        color=colors[mode], alpha=0.2)
+
+    plt.title("Training Convergence: Policy Loss by Reward Mode", fontsize=14)
+    plt.xlabel("Gradient Updates", fontsize=12)
+    plt.ylabel("Loss Magnitude", fontsize=12)
+    plt.yscale("linear")
+    plt.legend()
+    
+    path = os.path.join(output_dir, "simplified_loss_comparison.png")
+    plt.savefig(path, dpi=300, bbox_inches="tight")
+    plt.close()
+    print(f"Simplified loss plot saved → {path}")
 
 # ─── Trust Score Curves ────────────────────────────────────────────────────────
 
@@ -138,7 +278,7 @@ def plot_trust_curves(curves_dir, output_dir):
 
 def plot_loss_curves(curves_dir, output_dir):
     """
-    Plot policy gradient loss (PPO) or actor loss (SAC) over training.
+    Plot policy gradient loss (PPO) or TD loss (DQN) over training.
 
     Loss values are only recorded after gradient updates, so the x-axis
     represents the number of completed gradient steps, not environment steps.
@@ -238,7 +378,7 @@ def plot_env_comparison(df, output_dir):
 
 def plot_agent_comparison(df, output_dir):
     """
-    Side-by-side bar chart comparing PPO vs SAC success rates,
+    Side-by-side bar chart comparing PPO vs DQN success rates,
     averaged over all environments and human scenarios.
     Bars are grouped by mode.
     """
@@ -258,7 +398,7 @@ def plot_agent_comparison(df, output_dir):
     ax = agg.plot(kind="bar", figsize=(7, 4), colormap="Set2", edgecolor="black", linewidth=0.5)
     ax.set_xlabel("Mode", fontsize=9)
     ax.set_ylabel("Mean success rate (over all envs & humans)", fontsize=9)
-    ax.set_title("Agent Comparison: PPO vs SAC", fontsize=10)
+    ax.set_title("Agent Comparison: PPO vs DQN", fontsize=10)
     ax.set_ylim(0, 1.05)
     ax.legend(title="Agent", fontsize=8)
     plt.xticks(rotation=0)
@@ -303,6 +443,9 @@ def main():
     else:
         print("Only one agent in results — skipping agent comparison plot.")
 
+    save_poster_table(df, output_dir)
+    plot_poster_visuals(df, output_dir)
+    plot_loss_curves_simplified(results_dir, output_dir)
     print(f"\nAll outputs saved to: {output_dir}/")
 
 
