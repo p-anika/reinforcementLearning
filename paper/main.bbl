@@ -1,0 +1,147 @@
+\begin{thebibliography}{10}
+
+\bibitem{amodei2016concrete}
+Dario Amodei, Chris Olah, Jacob Steinhardt, Paul Christiano, John Schulman, and
+  Dan Man{\'e}.
+\newblock Concrete problems in {AI} safety.
+\newblock {\em arXiv preprint arXiv:1606.06565}, 2016.
+\newblock \url{https://arxiv.org/abs/1606.06565}.
+
+\bibitem{chevalier2023minigrid}
+Maxime Chevalier-Boisvert, Bolun Dai, Mark Towers, Rodrigo de~Lazcano, Lucas
+  Willems, Salem Lahlou, Suman Pal, Pablo~Samuel Castro, and Jordan Terry.
+\newblock {MiniGrid} and {MiniWorld}: Modular and customizable reinforcement
+  learning environments for goal-oriented tasks.
+\newblock {\em arXiv preprint arXiv:2306.13831}, 2023.
+\newblock \url{https://arxiv.org/abs/2306.13831}.
+
+\bibitem{christiano2017deep}
+Paul~F. Christiano, Jan Leike, Tom~B. Brown, Miljan Martic, Shane Legg, and
+  Dario Amodei.
+\newblock Deep reinforcement learning from human preferences.
+\newblock In {\em Advances in Neural Information Processing Systems},
+  volume~30, 2017.
+\newblock \url{https://arxiv.org/abs/1706.03741}.
+
+\bibitem{coste2023reward}
+Thomas Coste, Usman Anwar, Robert Kirk, and David Krueger.
+\newblock Reward model ensembles help mitigate overoptimization.
+\newblock In {\em International Conference on Learning Representations}, 2024.
+\newblock \url{https://arxiv.org/abs/2310.02743}.
+
+\bibitem{eisenstein2023helping}
+Jacob Eisenstein, Chirag Nagpal, Alekh Agarwal, Ahmad Beirami, Alex D'Amour,
+  D.~J. Dvijotham, Adam Fisch, Katherine Heller, Stephen Pfohl, Deepak
+  Ramachandran, Peter Shaw, and Jonathan Berant.
+\newblock Helping or herding? reward model ensembles mitigate but do not
+  eliminate reward hacking.
+\newblock {\em arXiv preprint arXiv:2312.09244}, 2023.
+\newblock \url{https://arxiv.org/abs/2312.09244}.
+
+\bibitem{gao2023scaling}
+Leo Gao, John Schulman, and Jacob Hilton.
+\newblock Scaling laws for reward model overoptimization.
+\newblock In {\em Proceedings of the 40th International Conference on Machine
+  Learning}, 2023.
+\newblock \url{https://arxiv.org/abs/2210.10760}.
+
+\bibitem{gelman2013bayesian}
+Andrew Gelman, John~B. Carlin, Hal~S. Stern, David~B. Dunson, Aki Vehtari, and
+  Donald~B. Rubin.
+\newblock {\em Bayesian Data Analysis}.
+\newblock CRC Press, 3 edition, 2013.
+
+\bibitem{ghavamzadeh2016bayesian}
+Mohammad Ghavamzadeh, Shie Mannor, Joelle Pineau, and Aviv Tamar.
+\newblock Bayesian reinforcement learning: A survey.
+\newblock {\em Foundations and Trends in Machine Learning}, 8(5-6):359--483,
+  2015.
+\newblock \url{https://arxiv.org/abs/1609.04436}.
+
+\bibitem{hadfield2016cooperative}
+Dylan Hadfield-Menell, Anca Dragan, Pieter Abbeel, and Stuart Russell.
+\newblock Cooperative inverse reinforcement learning.
+\newblock In {\em Advances in Neural Information Processing Systems},
+  volume~29, 2016.
+\newblock \url{https://arxiv.org/abs/1606.03137}.
+
+\bibitem{henderson2018deep}
+Peter Henderson, Riashat Islam, Philip Bachman, Joelle Pineau, Doina Precup,
+  and David Meger.
+\newblock Deep reinforcement learning that matters.
+\newblock {\em Proceedings of the AAAI Conference on Artificial Intelligence},
+  32(1), 2018.
+\newblock \url{https://arxiv.org/abs/1709.06560}.
+
+\bibitem{ibarz2018reward}
+Borja Ibarz, Jan Leike, Tobias Pohlen, Geoffrey Irving, Shane Legg, and Dario
+  Amodei.
+\newblock Reward learning from human preferences and demonstrations in {Atari}.
+\newblock In {\em Advances in Neural Information Processing Systems},
+  volume~31, 2018.
+\newblock \url{https://arxiv.org/abs/1811.06521}.
+
+\bibitem{mnih2015human}
+Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei~A. Rusu, Joel Veness,
+  Marc~G. Bellemare, Alex Graves, Martin Riedmiller, Andreas~K. Fidjeland,
+  Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis
+  Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and
+  Demis Hassabis.
+\newblock Human-level control through deep reinforcement learning.
+\newblock {\em Nature}, 518(7540):529--533, 2015.
+\newblock \url{https://doi.org/10.1038/nature14236}.
+
+\bibitem{ng1999policy}
+Andrew~Y. Ng, Daishi Harada, and Stuart Russell.
+\newblock Policy invariance under reward transformations: Theory and
+  application to reward shaping.
+\newblock In {\em Proceedings of the 16th International Conference on Machine
+  Learning}, pages 278--287, 1999.
+
+\bibitem{patterson2023empirical}
+Andrew Patterson, Samuel Neumann, Martha White, and Adam White.
+\newblock Empirical design in reinforcement learning.
+\newblock {\em arXiv preprint arXiv:2304.01315}, 2023.
+\newblock \url{https://arxiv.org/abs/2304.01315}.
+
+\bibitem{raffin2021stable}
+Antonin Raffin, Ashley Hill, Adam Gleave, Anssi Kanervisto, Maximilian
+  Ernestus, and Noah Dormann.
+\newblock {Stable-Baselines3}: Reliable reinforcement learning implementations.
+\newblock {\em Journal of Machine Learning Research}, 22(268):1--8, 2021.
+\newblock \url{https://jmlr.org/papers/v22/20-1364.html}.
+
+\bibitem{schulman2017proximal}
+John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov.
+\newblock Proximal policy optimization algorithms.
+\newblock {\em arXiv preprint arXiv:1707.06347}, 2017.
+\newblock \url{https://arxiv.org/abs/1707.06347}.
+
+\bibitem{sutton2018reinforcement}
+Richard~S. Sutton and Andrew~G. Barto.
+\newblock {\em Reinforcement Learning: An Introduction}.
+\newblock MIT Press, 2 edition, 2018.
+
+\bibitem{warnell2018deep}
+Garrett Warnell, Nicholas Waytowich, Vernon Lawhern, and Peter Stone.
+\newblock Deep {TAMER}: Interactive agent shaping in high-dimensional state
+  spaces.
+\newblock {\em Proceedings of the AAAI Conference on Artificial Intelligence},
+  32(1), 2018.
+\newblock \url{https://arxiv.org/abs/1709.10163}.
+
+\bibitem{wiewiora2011potential}
+Eric Wiewiora.
+\newblock Potential-based shaping and {Q}-value initialization are equivalent.
+\newblock {\em Journal of Artificial Intelligence Research}, 19:205--208, 2003.
+\newblock \url{https://arxiv.org/abs/1106.5267}.
+
+\bibitem{yuan2024unirlfh}
+Yifu Yuan, Jianye Hao, Yi~Ma, Zibin Dong, Hebin Liang, Jinyi Liu, Zhixin Feng,
+  Kai Zhao, and Yan Zheng.
+\newblock {Uni-RLHF}: Universal platform and benchmark suite for reinforcement
+  learning with diverse human feedback.
+\newblock In {\em International Conference on Learning Representations}, 2024.
+\newblock \url{https://arxiv.org/abs/2402.02423}.
+
+\end{thebibliography}

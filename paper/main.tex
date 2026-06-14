@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage[T1]{fontenc}
+
+\title{Cross-Modal Bayesian Reward Filtering for Robust Reinforcement Learning from Noisy Human Feedback}
+
+\author{
+Anika Prakash\thanks{Student author. Email: \texttt{prakashanika5@gmail.com}.}
+\and
+Rohan Pandey\thanks{Corresponding author. Email: \texttt{rpande.1729@gmail.com}.}
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Reinforcement learning from human feedback (RLHF) gives agents access to dense supervisory signals when the environment reward is sparse, delayed, or difficult to specify. This advantage also creates a vulnerability: if human feedback is noisy, biased, fatigued, or adversarial, then the agent may optimize the wrong signal with high confidence. We study whether sparse environment rewards and simple environment-derived progress checks can be used as a probabilistic reality check on human feedback during training. We introduce the Cross-Modal Bayesian Reward Filter (BRF), an online reward-fusion mechanism that maintains a Beta posterior over the reliability of a human feedback channel. At each transition, BRF compares the sign of human feedback with the sign of an environment-derived potential difference, updates a trust score, and uses that score to weight the human reward supplied to the agent. In MiniGrid experiments with synthetic human models, BRF matches or improves on sparse-only and naive human-feedback baselines in the solvable Empty-8x8 setting, reaching a success rate of $1.000$ under realistic noise compared with $0.667$ for naive RLHF and $0.333$ for sparse reward alone. More complex MiniGrid tasks remain largely unsolved under the 15,000-step training budget, indicating that BRF is not a substitute for exploration or long-horizon credit assignment. These results suggest that Bayesian arbitration can provide a low-cost safety layer for preference-based reinforcement learning when sparse but trustworthy environment information is available.
+\end{abstract}
+
+\section{Introduction}
+
+Human feedback is often used because the reward that we actually care about is difficult to write down. In reinforcement learning, an agent normally learns by maximizing cumulative reward through interaction with an environment \cite{sutton2018reinforcement}. In deep RLHF, a supervisor can compare trajectory segments or provide scalar feedback, and a policy can then be optimized against this learned or supplied reward signal \cite{christiano2017deep,warnell2018deep}. This approach has become influential because it replaces hand-designed reward functions with feedback that is easier for people to provide.
+
+The same substitution also changes the failure mode. A sparse environment reward is often incomplete, but it is usually tied to the task. Human feedback is denser and more informative, but it can be wrong. A teacher may become fatigued, misunderstand the objective, over-reward locally appealing behavior, or provide adversarial labels. These concerns are closely related to reward hacking, scalable supervision, and value-alignment failures studied in prior safety and preference-learning work \cite{amodei2016concrete,hadfield2016cooperative,gao2023scaling}. If the agent treats every human label as ground truth, then it has no mechanism for asking whether the label remains consistent with the world.
+
+This paper asks a narrow question: can an RL agent limit the effects of biased or noisy human feedback by using sparse environment rewards as a probabilistic reality check?
+We answer this question with a simple mechanism, the Cross-Modal Bayesian Reward Filter. The filter treats the human as a noisy sensor. It does not try to replace the human signal, and it does not require a reward-model ensemble. Instead, it keeps a posterior estimate of how often human feedback agrees with a separate environment-derived signal of progress. When agreement is frequent, the human reward is trusted. When disagreement accumulates, the human reward is muted.
+
+Our contribution is threefold. First, we formulate a bounded Bayesian trust update for online reward fusion between sparse environment rewards and dense human feedback. Second, we implement the filter as a wrapper that can be placed around standard reinforcement learning algorithms. Third, we evaluate the method in MiniGrid under several synthetic human-noise models, including stochastic, distance-dependent, fatigue, realistic, and adversarial feedback.
+
+The core finding is modest but useful. In the easy MiniGrid task, BRF improves learning when human feedback is imperfect but still partially informative. Under realistic noise, PPO with BRF reaches $1.000$ success, while naive feedback reaches $0.667$ and sparse reward reaches $0.333$. Under adversarial and high-noise settings, all methods fail at the same evaluation budget, but the trust score collapses toward zero, indicating that the filter identifies an unreliable teacher rather than amplifying it. In harder tasks, such as LavaGap and DoorKey, BRF alone does not solve the exploration problem. This distinction is important: the filter improves reward reliability, but it does not create exploration where the agent receives too little useful experience.
+
+\section{Related Work}
+
+\paragraph{Reinforcement learning from human feedback.}
+Christiano et al. \cite{christiano2017deep} showed that deep RL agents can learn complex behaviors from human preferences over trajectory segments while using only a small fraction of direct human feedback. Scalar human feedback has also been studied as a direct training signal, including in the TAMER and Deep TAMER line of work \cite{warnell2018deep}. Later work has extended feedback-based reward learning to demonstrations, preferences, and richer annotation pipelines \cite{ibarz2018reward,yuan2024unirlfh}. These methods are powerful because human judgments provide dense task information. They are also vulnerable because the learned or supplied reward may be an imperfect proxy for the desired behavior.
+
+\paragraph{Reward-model errors and overoptimization.}
+When a policy is optimized against a learned reward model, errors in that model can become targets for exploitation. Prior safety work identifies reward hacking as a central accident risk \cite{amodei2016concrete}, and more recent RLHF studies measure reward-model overoptimization directly \cite{gao2023scaling}. Reward-model ensembles and conservative objectives can reduce these failures \cite{coste2023reward,eisenstein2023helping}. BRF is motivated by the same concern but acts at a different location in the pipeline. Rather than building multiple reward models, it arbitrates between two reward channels online: a human channel and a sparse environment-derived channel.
+
+\paragraph{Bayesian reinforcement learning.}
+Bayesian RL provides a principled way to represent uncertainty over models, values, or policies \cite{ghavamzadeh2016bayesian}. BRF uses a much smaller Bayesian object: a Beta posterior over the reliability of the human feedback channel. The purpose is not exploration over MDP dynamics, but calibration of trust in a supervisory signal.
+
+\paragraph{Reward shaping.}
+Potential-based reward shaping can accelerate learning while preserving optimal policies under suitable conditions \cite{ng1999policy,wiewiora2011potential}. Our environment-derived progress check is inspired by this idea. In MiniGrid, the potential is based on progress toward the current goal or subgoal. In this project, the potential is used primarily as a consistency test for human feedback, not as a standalone shaped reward.
+
+\section{Method}
+
+We consider an agent interacting with an environment over transitions $(s_t,a_t,s_{t+1})$ in the standard Markov decision process setting \cite{sutton2018reinforcement}. The environment provides a sparse reward $r_{\mathrm{env},t}$, and a human teacher provides a scalar feedback signal $r_{\mathrm{h},t}$. In our experiments, $r_{\mathrm{h},t}\in\{-0.1,+0.1\}$ before corruption. Positive feedback indicates that the teacher believes the transition moved the agent closer to the task goal, and negative feedback indicates the opposite.
+
+\subsection{Cross-Modal Reward Fusion}
+
+The reward delivered to the agent is
+\begin{equation}
+r_t = r_{\mathrm{env},t} + w_t r_{\mathrm{h},t},
+\label{eq:reward}
+\end{equation}
+where $w_t\in[0,1]$ is a trust score. The sparse reward remains unweighted because it is treated as the task-grounded channel. The human reward is weighted because it is dense but fallible.
+
+The central design question is how to update $w_t$. BRF derives a binary agreement observation from a potential function $\Phi:S\rightarrow\mathbb{R}$. For a transition, define
+\begin{equation}
+\Delta\Phi_t=\Phi(s_{t+1})-\Phi(s_t).
+\end{equation}
+The filter compares the sign of $\Delta\Phi_t$ with the sign of $r_{\mathrm{h},t}$. Agreement means the human feedback and the environment-derived progress signal point in the same direction:
+\begin{equation}
+z_t =
+\begin{cases}
+1, & \mathrm{sign}(r_{\mathrm{h},t})=\mathrm{sign}(\Delta\Phi_t),\\
+0, & \mathrm{sign}(r_{\mathrm{h},t})\neq \mathrm{sign}(\Delta\Phi_t).
+\end{cases}
+\end{equation}
+When $\Delta\Phi_t=0$, the transition is uninformative for trust estimation and no Bayesian update is applied.
+
+\subsection{Beta-Bernoulli Trust Update}
+
+BRF maintains a Beta posterior over teacher reliability, using the standard conjugate Beta-Bernoulli update for binary observations \cite{gelman2013bayesian}:
+\[
+\theta\sim\mathrm{Beta}(\alpha_t,\beta_t).
+\]
+The posterior parameters are initialized as $\alpha_0=\beta_0=1$, which corresponds to a uniform prior and an initial trust score of $0.5$. For informative transitions, the update is
+\begin{equation}
+\alpha_{t+1}=\alpha_t+z_t,\qquad
+\beta_{t+1}=\beta_t+(1-z_t).
+\end{equation}
+The trust score is the posterior mean:
+\begin{equation}
+w_t = \mathbb{E}[\theta\mid z_{1:t}] =
+\frac{\alpha_t}{\alpha_t+\beta_t}.
+\label{eq:trust}
+\end{equation}
+This update has two useful properties for RLHF-style training. First, the human reward is bounded rather than amplified. Second, trust changes online, so the same training run can respond to a teacher whose reliability changes over time.
+
+\subsection{Potential Functions in MiniGrid}
+
+For MiniGrid-Empty-8x8, the potential is
+\begin{equation}
+\Phi(s)=-d_{\mathrm{Manhattan}}(p_{\mathrm{agent}},p_{\mathrm{goal}}).
+\end{equation}
+For LavaGap, the same distance term is augmented with a penalty near lava. For DoorKey, the potential is staged: the agent is first evaluated by distance to the key, then to the door, then to the goal. These potentials are not intended to be perfect task rewards. They are lightweight progress sensors that allow the filter to ask whether human feedback is directionally plausible.
+
+\subsection{Baselines}
+
+We compare three reward-integration rules:
+
+\begin{table}[h]
+\centering
+\caption{Reward-integration methods.}
+\label{tab:baselines}
+\begin{tabular}{lll}
+\toprule
+Method & Trust weight & Reward supplied to agent \\
+\midrule
+Sparse & $w_t=0$ & $r_{\mathrm{env},t}$ \\
+Naive & $w_t=1$ & $r_{\mathrm{env},t}+r_{\mathrm{h},t}$ \\
+BRF & $w_t=\alpha_t/(\alpha_t+\beta_t)$ & $r_{\mathrm{env},t}+w_t r_{\mathrm{h},t}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The sparse baseline measures what can be learned without human feedback. The naive baseline measures the standard failure mode in which the human channel is always trusted. BRF tests whether online trust estimation improves this tradeoff.
+
+\section{Experimental Setup}
+
+\subsection{Environments}
+
+Experiments use MiniGrid \cite{chevalier2023minigrid}, a family of compact grid-world environments designed for goal-oriented RL. We evaluate on three tasks:
+
+\begin{itemize}
+\item \textbf{MiniGrid-Empty-8x8-v0}: the agent must reach a green goal tile in an empty room.
+\item \textbf{MiniGrid-LavaGapS7-v0}: the agent must reach the goal while avoiding a lava barrier.
+\item \textbf{MiniGrid-DoorKey-8x8-v0}: the agent must pick up a key, unlock a door, and reach the goal.
+\end{itemize}
+
+The tasks differ sharply in exploration difficulty. Empty-8x8 gives the cleanest test of noisy feedback because the shortest-path potential is informative. DoorKey is harder because the task requires staged behavior and delayed consequences.
+
+\subsection{Synthetic Human Teachers}
+
+We simulate several teacher types to isolate different forms of unreliable feedback:
+
+\begin{itemize}
+\item \textbf{StochasticLow}: feedback is flipped with probability $0.1$.
+\item \textbf{StochasticHigh}: feedback is flipped with probability $0.8$.
+\item \textbf{Adversarial}: feedback always contradicts the progress signal.
+\item \textbf{DistanceNoise}: feedback becomes less reliable farther from the goal.
+\item \textbf{Fatigue}: noise increases over training, reaching high corruption late in the run.
+\item \textbf{Realistic}: feedback combines base noise, distance-dependent confusion, and fatigue.
+\end{itemize}
+
+These teachers are not meant to model all human behavior. They are controlled stress tests that separate recoverable noise from unrecoverable corruption.
+
+\subsection{Agents and Hyperparameters}
+
+We evaluate PPO \cite{schulman2017proximal} and DQN \cite{mnih2015human}. PPO is on-policy, so changes in $w_t$ affect the data currently being collected. DQN is off-policy, so earlier corrupted feedback can remain in replayed experience after the trust score has changed. This difference is central to the interpretation of our results.
+
+All runs use the same training budget and default Stable-Baselines3-style hyperparameters \cite{raffin2021stable} unless otherwise stated. Each run trains for 15,000 environment steps. PPO uses 10 epochs, a learning rate of $3\times 10^{-4}$, and Adam. Evaluation uses 20 episodes for the final reported success rates in the outline and poster results.
+
+\section{Results}
+
+\subsection{PPO on MiniGrid-Empty-8x8}
+
+Table \ref{tab:ppoempty} shows the clearest result. In the solvable Empty-8x8 task, BRF matches or improves on the baselines for all non-degenerate teacher settings reported in the project summary.
+
+\begin{table}[h]
+\centering
+\caption{PPO success rate on MiniGrid-Empty-8x8. Values are fractions of evaluation episodes that reached the goal.}
+\label{tab:ppoempty}
+\begin{tabular}{lccc}
+\toprule
+Human model & Sparse & Naive & BRF \\
+\midrule
+Adversarial & 0.000 & 0.000 & 0.000 \\
+DistanceNoise & 0.333 & 0.333 & 0.333 \\
+Fatigue & 0.333 & 0.333 & 0.667 \\
+Realistic & 0.333 & 0.667 & 1.000 \\
+StochasticHigh & 0.000 & 0.000 & 0.000 \\
+StochasticLow & 0.000 & 0.667 & 0.667 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The strongest gain appears under the Realistic teacher. In that setting, the teacher is not consistently correct, but it remains informative enough that full rejection would waste useful shaping information. BRF improves over sparse reward by $66.7$ percentage points and over naive feedback by $33.3$ percentage points. Under Fatigue, BRF also improves over both baselines, reaching $0.667$ where sparse and naive methods each reach $0.333$.
+
+The adversarial and high-stochastic settings show a different lesson. BRF does not recover a policy when the feedback is too corrupted and the sparse reward is too rare. However, trust-weight plots from the project show that the filter drives the adversarial teacher's weight toward zero and assigns low weight to highly stochastic feedback. In other words, the filter can identify bad feedback, but if the environment reward is too sparse to support learning alone, rejection is not sufficient for success.
+
+\subsection{Cross-Environment Results}
+
+The harder environments reveal the limits of the method. DoorKey is unsolved by all methods at the 15,000-step budget. LavaGap shows only small nonzero success rates in a few cases. The project outline reports that Empty-8x8 is the only environment where any method consistently succeeds under the tested budget.
+
+\begin{table}[h]
+\centering
+\caption{Summary of harder-environment outcomes from the project analysis.}
+\label{tab:hard}
+\begin{tabular}{p{0.14\linewidth}p{0.12\linewidth}p{0.34\linewidth}p{0.28\linewidth}}
+\toprule
+Environment & Agent & Main observation & Interpretation \\
+\midrule
+DoorKey & PPO/DQN & All methods near 0.000 & Long-horizon exploration dominates \\
+LavaGap & PPO/DQN & Small gains, roughly 0.05 to 0.20 in limited cases & Filter signal is useful but too weak \\
+Empty-8x8 & PPO & BRF improves under Fatigue and Realistic noise & Recoverable human noise can be down-weighted \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These results prevent an overly broad conclusion. BRF should be understood as a reward-channel reliability mechanism. It does not solve sparse exploration by itself. If an agent never reaches informative states, the filter has little evidence to use and little task reward to preserve.
+
+\subsection{DQN Results}
+
+DQN performs poorly in this benchmark. The sparse baseline is $0.000$ across the reported DQN runs, and DoorKey remains $0.000$ for all teacher types. On Empty-8x8, DQN sometimes benefits from human feedback, but the BRF advantage is less stable than with PPO. For example, the outline reports Naive at $0.667$ and BRF at $0.333$ under DistanceNoise, while BRF improves over Naive under StochasticLow ($0.667$ versus $0.333$). LavaGap shows minor nonzero performance under Fatigue and Realistic feedback, but the results remain low.
+
+This behavior is consistent with the algorithmic difference between PPO and DQN. PPO is on-policy, so the current trust score directly affects the current training distribution. DQN reuses earlier experience. If early feedback is corrupted, replay can continue training on reward values generated before the filter learned to distrust the teacher. A more appropriate off-policy version of BRF would either store reward components separately and recompute filtered rewards during replay, or store the posterior state required to correct earlier rewards.
+
+\section{Analysis}
+
+The experiments support a qualified answer to the research question. A sparse environment signal can reduce the harm from biased or noisy human feedback when the environment-derived progress check is informative and the teacher is not fully corrupted. The benefit is clearest when the human is partially reliable: too useful to ignore, but too noisy to trust blindly. That is exactly the setting where a posterior trust score is valuable.
+
+BRF also gives a meaningful diagnostic. The trust score is interpretable. When the adversarial teacher is used, the posterior mean falls toward zero. When feedback is low-noise, the posterior remains high. Under Fatigue and Realistic teachers, the score declines as the teacher becomes less reliable. This interpretability is useful because it separates two failures that look identical in final return: failure because the teacher is bad, and failure because the task is too sparse for the agent to exploit even after bad feedback is rejected.
+
+The results also expose an implementation and reporting caution. Earlier project notes indicate that a notebook prototype used an invalid update in which disagreement decreased $\beta$ rather than increasing it. That update breaks the Beta posterior interpretation and can push the trust weight outside $[0,1]$. The formulation in this paper uses the corrected Beta-Bernoulli update. Future experimental releases should ensure that all reported curves and tables are regenerated from the corrected implementation, with fixed random seeds and confidence intervals. The pilot results are promising, but a final archival version should treat the corrected implementation as the source of record.
+
+\section{Limitations}
+
+The first limitation is scale. MiniGrid is useful for controlled diagnosis, but it is far simpler than language-model RLHF or real robotic feedback. The second limitation is the hand-designed potential. BRF assumes access to an environment-derived progress signal that is more reliable than the human label. In many tasks, such a signal may be unavailable or itself biased. The third limitation is sparse exploration. DoorKey and LavaGap show that filtering feedback does not create enough exploration pressure when rewards are extremely delayed. The fourth limitation is statistical power. The reported tables should be extended with multiple seeds, uncertainty estimates, and ablations over prior strength, feedback magnitude, and training budget, following reproducibility guidance for deep RL experiments \cite{henderson2018deep,patterson2023empirical}.
+
+\section{Future Work}
+
+There are several direct extensions. First, BRF should be evaluated with the corrected bounded update across more random seeds and longer budgets. Second, the off-policy version should recompute filtered rewards during replay so DQN-style algorithms can benefit from posterior updates. Third, the method should be tested on Uni-RLHF datasets \cite{yuan2024unirlfh}, where real human feedback provides a stronger test than synthetic teachers. Fourth, the trust model can be generalized from one global teacher reliability score to a state-dependent or context-dependent reliability model. A teacher may be reliable near the goal but unreliable near hazards, or reliable early in training but fatigued later. Finally, BRF can be combined with conservative reward-model ensembles, using environment checks as an additional calibration signal rather than a replacement for uncertainty estimation.
+
+\section{Conclusion}
+
+This work studies a simple idea: human feedback should be trusted when it agrees with the world, and discounted when it repeatedly contradicts it. The Cross-Modal Bayesian Reward Filter implements this idea with a Beta posterior over teacher reliability and a bounded trust-weighted reward. In MiniGrid pilot experiments, BRF improves PPO performance under realistic and fatigue-style noise while rejecting adversarial feedback. The method is computationally cheap, interpretable, and easy to attach to existing RL pipelines. Its main weakness is equally clear: it filters reward information, but it does not solve exploration. BRF is therefore best viewed as a lightweight reliability layer for RLHF systems that already have access to sparse but trustworthy environment evidence.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
