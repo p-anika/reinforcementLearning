@@ -1,0 +1,5 @@
+agent,env_id,mode,human,seed,success_rate,mean_reward,std_reward,train_seconds
+PPO,MiniGrid-Empty-8x8-v0,sparse,StochasticLow,42,0.0,0.0,0.0,3.55
+PPO,MiniGrid-Empty-8x8-v0,naive,StochasticLow,42,0.0,-13.843999999999967,0.9408846900656817,3.46
+PPO,MiniGrid-Empty-8x8-v0,ema,StochasticLow,42,0.0,-13.194388464039388,1.6191694761169608,2.91
+PPO,MiniGrid-Empty-8x8-v0,bayesian,StochasticLow,42,0.0,-17.297312201707594,1.1589049679753534,2.73

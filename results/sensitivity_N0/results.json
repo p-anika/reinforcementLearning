@@ -1,0 +1,902 @@
+[
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "sparse",
+    "human": "StochasticLow",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 21.14
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "sparse",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 21.82
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "sparse",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 37.26
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "sparse",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 36.33
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "sparse",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 33.93
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "sparse",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 31.01
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "naive",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.6378125000000001,
+    "std_reward": 0.23151673805580447,
+    "train_seconds": 34.4
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "naive",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 15.669999999999964,
+    "std_reward": 1.356871401423142,
+    "train_seconds": 33.25
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "naive",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 25.60000000000009,
+    "std_reward": 3.552713678800501e-15,
+    "train_seconds": 33.6
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "naive",
+    "human": "DistanceNoise",
+    "success_rate": 0.0,
+    "mean_reward": -16.92844178081633,
+    "std_reward": 0.5998959600595362,
+    "train_seconds": 33.89
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "naive",
+    "human": "Fatigue",
+    "success_rate": 0.0,
+    "mean_reward": -23.47418725971022,
+    "std_reward": 0.7638258114617865,
+    "train_seconds": 34.04
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "naive",
+    "human": "Realistic",
+    "success_rate": 0.0,
+    "mean_reward": -17.02557349873745,
+    "std_reward": 0.7780215358738731,
+    "train_seconds": 33.68
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "bayesian",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.6149950144443406,
+    "std_reward": 0.17269416702179602,
+    "train_seconds": 35.31
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "bayesian",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 7.834999999999982,
+    "std_reward": 0.678435700711571,
+    "train_seconds": 33.84
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "bayesian",
+    "human": "Adversarial",
+    "success_rate": 1.0,
+    "mean_reward": 0.9500901935777917,
+    "std_reward": 0.009534283862007482,
+    "train_seconds": 33.69
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "bayesian",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 1.4268847490015983,
+    "std_reward": 0.1415636096067481,
+    "train_seconds": 34.64
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "bayesian",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 1.8502559703480272,
+    "std_reward": 0.01969925186283354,
+    "train_seconds": 34.19
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 1,
+    "mode": "bayesian",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 1.504690759157966,
+    "std_reward": 0.13974129189557938,
+    "train_seconds": 34.23
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "sparse",
+    "human": "StochasticLow",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 34.21
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "sparse",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 34.27
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "sparse",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 33.53
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "sparse",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 38.6
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "sparse",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 37.27
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "sparse",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 36.09
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "naive",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.6378125000000001,
+    "std_reward": 0.23151673805580447,
+    "train_seconds": 36.44
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "naive",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 15.669999999999964,
+    "std_reward": 1.356871401423142,
+    "train_seconds": 37.54
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "naive",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 25.60000000000009,
+    "std_reward": 3.552713678800501e-15,
+    "train_seconds": 36.53
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "naive",
+    "human": "DistanceNoise",
+    "success_rate": 0.0,
+    "mean_reward": -16.92844178081633,
+    "std_reward": 0.5998959600595362,
+    "train_seconds": 37.7
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "naive",
+    "human": "Fatigue",
+    "success_rate": 0.0,
+    "mean_reward": -23.47418725971022,
+    "std_reward": 0.7638258114617865,
+    "train_seconds": 37.09
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "naive",
+    "human": "Realistic",
+    "success_rate": 0.0,
+    "mean_reward": -17.02557349873745,
+    "std_reward": 0.7780215358738731,
+    "train_seconds": 36.91
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "bayesian",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.6085864480972991,
+    "std_reward": 0.1716219651282745,
+    "train_seconds": 36.7
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "bayesian",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 7.834999999999982,
+    "std_reward": 0.678435700711571,
+    "train_seconds": 37.04
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "bayesian",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 12.800000000000045,
+    "std_reward": 1.7763568394002505e-15,
+    "train_seconds": 36.78
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "bayesian",
+    "human": "DistanceNoise",
+    "success_rate": 0.0,
+    "mean_reward": -12.512738543903192,
+    "std_reward": 1.2791420237612872,
+    "train_seconds": 37.66
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "bayesian",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 1.8415012462765241,
+    "std_reward": 0.031174226406855535,
+    "train_seconds": 36.64
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 2,
+    "mode": "bayesian",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 1.3866987185307247,
+    "std_reward": 0.1477429366831343,
+    "train_seconds": 36.47
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "sparse",
+    "human": "StochasticLow",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 36.29
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "sparse",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 36.42
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "sparse",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 37.04
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "sparse",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 37.0
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "sparse",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 36.45
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "sparse",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 37.58
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "naive",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.6378125000000001,
+    "std_reward": 0.23151673805580447,
+    "train_seconds": 36.79
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "naive",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 15.669999999999964,
+    "std_reward": 1.356871401423142,
+    "train_seconds": 37.12
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "naive",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 25.60000000000009,
+    "std_reward": 3.552713678800501e-15,
+    "train_seconds": 35.56
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "naive",
+    "human": "DistanceNoise",
+    "success_rate": 0.0,
+    "mean_reward": -16.92844178081633,
+    "std_reward": 0.5998959600595362,
+    "train_seconds": 34.66
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "naive",
+    "human": "Fatigue",
+    "success_rate": 0.0,
+    "mean_reward": -23.47418725971022,
+    "std_reward": 0.7638258114617865,
+    "train_seconds": 34.43
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "naive",
+    "human": "Realistic",
+    "success_rate": 0.0,
+    "mean_reward": -17.02557349873745,
+    "std_reward": 0.7780215358738731,
+    "train_seconds": 34.34
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "bayesian",
+    "human": "StochasticLow",
+    "success_rate": 0.0,
+    "mean_reward": -16.239646230044052,
+    "std_reward": 1.2323681824655195,
+    "train_seconds": 34.36
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "bayesian",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 7.834999999999982,
+    "std_reward": 0.678435700711571,
+    "train_seconds": 34.68
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "bayesian",
+    "human": "Adversarial",
+    "success_rate": 1.0,
+    "mean_reward": 0.9232672406954047,
+    "std_reward": 0.04010279547968392,
+    "train_seconds": 34.42
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "bayesian",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 1.342751199057566,
+    "std_reward": 0.150912397949523,
+    "train_seconds": 33.69
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "bayesian",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 1.5082822049310436,
+    "std_reward": 0.04423624187802258,
+    "train_seconds": 34.02
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 5,
+    "mode": "bayesian",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 1.3487071298842046,
+    "std_reward": 0.14742191935355384,
+    "train_seconds": 34.42
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "sparse",
+    "human": "StochasticLow",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 34.14
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "sparse",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 34.45
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "sparse",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 34.09
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "sparse",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 34.02
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "sparse",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 34.37
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "sparse",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 34.11
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "naive",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.6378125000000001,
+    "std_reward": 0.23151673805580447,
+    "train_seconds": 36.56
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "naive",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 15.669999999999964,
+    "std_reward": 1.356871401423142,
+    "train_seconds": 35.58
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "naive",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 25.60000000000009,
+    "std_reward": 3.552713678800501e-15,
+    "train_seconds": 34.24
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "naive",
+    "human": "DistanceNoise",
+    "success_rate": 0.0,
+    "mean_reward": -16.92844178081633,
+    "std_reward": 0.5998959600595362,
+    "train_seconds": 33.74
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "naive",
+    "human": "Fatigue",
+    "success_rate": 0.0,
+    "mean_reward": -23.47418725971022,
+    "std_reward": 0.7638258114617865,
+    "train_seconds": 33.5
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "naive",
+    "human": "Realistic",
+    "success_rate": 0.0,
+    "mean_reward": -17.02557349873745,
+    "std_reward": 0.7780215358738731,
+    "train_seconds": 19.92
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "bayesian",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.5749725436699258,
+    "std_reward": 0.16559462645822612,
+    "train_seconds": 20.24
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "bayesian",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 7.834999999999982,
+    "std_reward": 0.678435700711571,
+    "train_seconds": 29.71
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "bayesian",
+    "human": "Adversarial",
+    "success_rate": 1.0,
+    "mean_reward": 0.8993838163044133,
+    "std_reward": 0.05556343839472963,
+    "train_seconds": 34.86
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "bayesian",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 1.335165697869108,
+    "std_reward": 0.1492193878950773,
+    "train_seconds": 34.62
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "bayesian",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 1.7939050921615536,
+    "std_reward": 0.06637920900402146,
+    "train_seconds": 34.0
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 10,
+    "mode": "bayesian",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 1.4429126913034662,
+    "std_reward": 0.13284008181834364,
+    "train_seconds": 33.89
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "sparse",
+    "human": "StochasticLow",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 34.12
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "sparse",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 28.83
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "sparse",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 0.0,
+    "std_reward": 0.0,
+    "train_seconds": 19.6
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "sparse",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 20.11
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "sparse",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 20.07
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "sparse",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 0.9578124999999998,
+    "std_reward": 1.1102230246251565e-16,
+    "train_seconds": 20.32
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "naive",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.6378125000000001,
+    "std_reward": 0.23151673805580447,
+    "train_seconds": 20.22
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "naive",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 15.669999999999964,
+    "std_reward": 1.356871401423142,
+    "train_seconds": 20.3
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "naive",
+    "human": "Adversarial",
+    "success_rate": 0.0,
+    "mean_reward": 25.60000000000009,
+    "std_reward": 3.552713678800501e-15,
+    "train_seconds": 19.82
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "naive",
+    "human": "DistanceNoise",
+    "success_rate": 0.0,
+    "mean_reward": -16.92844178081633,
+    "std_reward": 0.5998959600595362,
+    "train_seconds": 23.71
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "naive",
+    "human": "Fatigue",
+    "success_rate": 0.0,
+    "mean_reward": -23.47418725971022,
+    "std_reward": 0.7638258114617865,
+    "train_seconds": 32.82
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "naive",
+    "human": "Realistic",
+    "success_rate": 0.0,
+    "mean_reward": -17.02557349873745,
+    "std_reward": 0.7780215358738731,
+    "train_seconds": 44100.52
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "bayesian",
+    "human": "StochasticLow",
+    "success_rate": 1.0,
+    "mean_reward": 1.5478219374265445,
+    "std_reward": 0.16045540946878342,
+    "train_seconds": 32.78
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "bayesian",
+    "human": "StochasticHigh",
+    "success_rate": 0.0,
+    "mean_reward": 7.834999999999982,
+    "std_reward": 0.678435700711571,
+    "train_seconds": 32.77
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "bayesian",
+    "human": "Adversarial",
+    "success_rate": 1.0,
+    "mean_reward": 0.8642104248915142,
+    "std_reward": 0.06860368917892976,
+    "train_seconds": 37.59
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "bayesian",
+    "human": "DistanceNoise",
+    "success_rate": 1.0,
+    "mean_reward": 1.3235318936354892,
+    "std_reward": 0.14569530720392973,
+    "train_seconds": 39.47
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "bayesian",
+    "human": "Fatigue",
+    "success_rate": 1.0,
+    "mean_reward": 1.7544992563677009,
+    "std_reward": 0.0797279394158127,
+    "train_seconds": 28.97
+  },
+  {
+    "sweep_param": "N0",
+    "param_value": 20,
+    "mode": "bayesian",
+    "human": "Realistic",
+    "success_rate": 1.0,
+    "mean_reward": 1.4054007351623454,
+    "std_reward": 0.1239378131865334,
+    "train_seconds": 37.76
+  }
+]

@@ -33,26 +33,27 @@ ENVIRONMENTS = {
 # DQN is chosen over SAC because MiniGrid uses Discrete(7) actions — DQN
 # handles discrete spaces natively, whereas SAC requires a continuous adapter.
 
-AGENTS = ["PPO", "DQN"]
+AGENTS = ["PPO"]
 
 # ─── Reward Modes ─────────────────────────────────────────────────────────────
-# These are the three conditions compared in every experiment.
+# Four conditions compared in every experiment:
 #   sparse   → pure RL baseline (ignores human)
-#   naive    → standard RLHF (fully trusts human)
+#   naive    → standard RLHF (fully trusts human, w=1)
+#   ema      → frequentist baseline: exponential moving average trust
 #   bayesian → novel Bayesian trust-weighting (this paper's contribution)
 
-MODES = ["sparse", "naive", "bayesian"]
+MODES = ["sparse", "naive", "ema", "bayesian"]
 
 # ─── Random Seeds ─────────────────────────────────────────────────────────────
-# Multiple seeds allow reporting mean ± std in the paper.
+# 5 seeds: community standard for reliable mean ± CI reporting.
 
-SEEDS = [42, 123, 999]
+SEEDS = [42, 123, 456, 789, 999]
 
 # ─── Training & Evaluation ────────────────────────────────────────────────────
 
 TRAINING = {
-    "total_timesteps": 15_000,   # Training steps per agent per condition
-    "eval_episodes":   20,       # Evaluation episodes after training
+    "total_timesteps": 100_000,  # Training steps per agent per condition
+    "eval_episodes":   50,       # Evaluation episodes after training
 }
 
 # ─── Reward Shaping ───────────────────────────────────────────────────────────
@@ -61,7 +62,44 @@ REWARD = {
     "human_magnitude": 0.1,   # Human feedback magnitude (±0.1 by convention)
     "alpha_init":      1.0,   # Beta prior: initial agreement count (uniform prior)
     "beta_init":       1.0,   # Beta prior: initial disagreement count (uniform prior)
+    "ema_alpha":       0.01,  # EMA decay rate (α in w_t = (1-α)*w_{t-1} + α*agreement_t)
+    "ema_w0":          0.5,   # EMA initial trust — neutral, matching Bayesian prior
 }
+
+# ─── Hyperparameter Sensitivity ───────────────────────────────────────────────
+# One-at-a-time sweep grids for the three Bayesian-specific hyperparameters.
+# Expressed in interpretable terms:
+#   w0  = α / (α + β)  — initial trust weight (0 = skeptical, 0.5 = neutral, 1 = trusting)
+#   N0  = α + β        — prior strength (how many steps before evidence dominates the prior)
+#   magnitude          — maximum human feedback per step (teachers return ±0.1 by convention)
+
+SENSITIVITY = {
+    "w0":        [0.1, 0.3, 0.5, 0.7, 0.9],
+    "N0":        [1,   2,   5,  10,  20  ],
+    "magnitude": [0.02, 0.05, 0.1, 0.2, 0.5],
+}
+
+SENSITIVITY_DEFAULTS = {
+    "w0":        0.5,    # neutral prior → alpha_init = beta_init = 1.0
+    "N0":        2,      # weak prior  → α + β = 2
+    "magnitude": 0.1,    # ±0.1 per step, 10% of terminal reward
+}
+
+
+def prior_to_alpha_beta(w0, N0):
+    """
+    Convert interpretable prior parameters to (alpha_init, beta_init).
+
+    Parameters
+    ----------
+    w0 : float  initial trust weight in [0, 1]  (w0 = alpha / (alpha + beta))
+    N0 : float  prior strength (N0 = alpha + beta)
+
+    Returns
+    -------
+    (alpha_init, beta_init) : tuple[float, float]
+    """
+    return w0 * N0, (1.0 - w0) * N0
 
 # ─── Human Teacher Scenarios ──────────────────────────────────────────────────
 # Maps display name → (class_name, constructor_kwargs).
@@ -86,3 +124,5 @@ HUMANS = {
     "Realistic":      ("RealisticHuman",     {"base_noise": 0.05}),
     # Combines distance confusion + fatigue + baseline noise (most realistic proxy)
 }
+
+# kjdhfjdf is this p
