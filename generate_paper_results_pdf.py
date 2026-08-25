@@ -193,9 +193,9 @@ def make_diff_heatmap(df, path):
     plt.close()
 
 print("Generating figures...")
-make_bar_charts(df, "Reward-Discussion/figures/fig_bar_charts.png")
-make_heatmap(df,    "Reward-Discussion/figures/fig_heatmap.png")
-make_diff_heatmap(df, "Reward-Discussion/figures/fig_diff_heatmap.png")
+make_bar_charts(df, "Reward-Discussion/figures/success_rate_bar_charts.png")
+make_heatmap(df,    "Reward-Discussion/figures/success_rate_heatmap.png")
+make_diff_heatmap(df, "Reward-Discussion/figures/brf_comparision_heatmap.png")
 print("Figures done.")
 
 # ─── Significance tests ────────────────────────────────────────────────────────
