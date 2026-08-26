@@ -124,5 +124,3 @@ HUMANS = {
     "Realistic":      ("RealisticHuman",     {"base_noise": 0.05}),
     # Combines distance confusion + fatigue + baseline noise (most realistic proxy)
 }
-
-# kjdhfjdf is this p
