@@ -24,6 +24,10 @@ from reward_filter.bayesian import update_bayesian_trust, fresh_history
 from reward_filter.moving_average import update_ema_trust, fresh_ema_history
 from env.potential import get_potential_fn
 
+# Magnitude of the feedback returned by the teachers in humans/teachers.py (±0.1).
+# human_magnitude is expressed relative to this value.
+TEACHER_OUTPUT_MAGNITUDE = 0.1
+
 
 # ─── Environment Factory ───────────────────────────────────────────────────────
 
@@ -32,7 +36,7 @@ def make_env(env_id):
     Create a MiniGrid environment ready for use with SB3.
 
     FlatObsWrapper converts the image-based observation (H×W×C tensor)
-    to a flat 1D vector so MLP-based policies (PPO, SAC) can consume it
+    to a flat 1D vector so MLP-based policies (PPO) can consume it
     without a CNN frontend.
     """
     env = gym.make(env_id, render_mode="rgb_array")
@@ -82,7 +86,7 @@ class ResearchWrapper(gym.Wrapper):
         self._ema_w0         = ema_w0
         # Scale factor relative to the teachers' hardcoded ±0.1 output.
         # At human_magnitude=0.1 (default) scale=1.0 — no change.
-        self._human_scale    = human_magnitude / 0.1
+        self._human_scale    = human_magnitude / TEACHER_OUTPUT_MAGNITUDE
 
         # Select the environment-appropriate potential function
         self.potential_fn = get_potential_fn(env_id)

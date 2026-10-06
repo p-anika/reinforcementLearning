@@ -1,0 +1,9 @@
+numpy==2.4.3
+pandas==2.3.3
+scipy==1.17.1
+matplotlib==3.10.8
+seaborn==0.13.2
+gymnasium==1.2.3
+minigrid==3.0.0
+stable-baselines3==2.8.0
+pytest>=8.0

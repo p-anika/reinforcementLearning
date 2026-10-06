@@ -7,7 +7,7 @@ To add a new environment: add an entry to ENVIRONMENTS.
 To add a new agent: add it to AGENTS (and register it in agents/factory.py).
 To add a new human model: add an entry to HUMANS.
 
-All other files read from here; no magic numbers should appear elsewhere.
+Experiment settings and hyperparameters live here; other modules read from this file.
 """
 
 # ─── Environments ─────────────────────────────────────────────────────────────
@@ -30,8 +30,8 @@ ENVIRONMENTS = {
 }
 
 # ─── RL Agents ────────────────────────────────────────────────────────────────
-# DQN is chosen over SAC because MiniGrid uses Discrete(7) actions — DQN
-# handles discrete spaces natively, whereas SAC requires a continuous adapter.
+# Only PPO is evaluated. BRF modifies rewards at collection time using the
+# current trust weight, which requires an on-policy learner (see paper, Sec. 4.3).
 
 AGENTS = ["PPO"]
 
@@ -42,6 +42,8 @@ AGENTS = ["PPO"]
 #   ema      → frequentist baseline: exponential moving average trust
 #   bayesian → novel Bayesian trust-weighting (this paper's contribution)
 
+# Note: "ema" was run as an additional baseline and is included in
+# results/main_run/results.csv.
 MODES = ["sparse", "naive", "ema", "bayesian"]
 
 # ─── Random Seeds ─────────────────────────────────────────────────────────────

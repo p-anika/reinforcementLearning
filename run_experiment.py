@@ -45,7 +45,7 @@ from env.wrappers import make_env, ResearchWrapper
 from humans.teachers import get_human
 from agents.factory import make_agent
 from training.callbacks import ResearchLoggerCallback
-from training.evaluator import evaluate_agent, save_results
+from training.evaluator import evaluate_agent
 
 
 RESULT_COLUMNS = [
@@ -129,6 +129,18 @@ def init_checkpoint(checkpoint_path):
         pd.DataFrame(columns=RESULT_COLUMNS).to_csv(checkpoint_path, index=False)
 
 
+def save_curves(out_dir, run_key, trust_scores, policy_losses):
+    """Save one run's trust and policy-loss curves as .npy files."""
+    curves_dir = os.path.join(out_dir, "curves")
+    os.makedirs(curves_dir, exist_ok=True)
+    np.save(os.path.join(curves_dir, f"{run_key}__trust.npy"),
+            np.array(trust_scores, dtype=np.float32))
+    # The loss is None until PPO's first update; drop those entries
+    losses = [v for v in policy_losses if v is not None]
+    np.save(os.path.join(curves_dir, f"{run_key}__loss.npy"),
+            np.array(losses, dtype=np.float32))
+
+
 def append_result(checkpoint_path, record):
     """Append a single result row to the checkpoint CSV."""
     pd.DataFrame([record]).to_csv(checkpoint_path, mode="a", header=False, index=False)
@@ -161,8 +173,6 @@ def main():
     remaining = len(matrix) - skipped
     print(f"Run '{run_name}': {len(matrix)} total, {skipped} already done, "
           f"{remaining} to run ({timesteps} steps each)\n")
-
-    curves = {}  # run_key -> {"trust": [...], "loss": [...]}
 
     for i, (agent_name, env_id, mode, human_name, seed) in enumerate(matrix, 1):
         ckpt_key = (env_id, mode, human_name, seed)
@@ -217,26 +227,13 @@ def main():
         done_keys.add(ckpt_key)
 
         run_key = f"{agent_name}__{env_id}__{mode}__{human_name}__seed{seed}"
-        curves[run_key] = {
-            "trust": callback.trust_scores,
-            "loss":  callback.policy_losses,
-        }
+        save_curves(out_dir, run_key, callback.trust_scores, callback.policy_losses)
 
         print(f"  -> success={metrics['success_rate']:.2f}  "
               f"mean_reward={metrics['mean_reward']:.3f}  "
               f"time={train_seconds}s\n")
 
-    # ── Save trust/loss curves (append-friendly dict) ─────────────────────────
-    if curves:
-        import numpy as np_
-        curves_dir = os.path.join(out_dir, "curves")
-        os.makedirs(curves_dir, exist_ok=True)
-        for run_key, data in curves.items():
-            np_.save(os.path.join(curves_dir, f"{run_key}__trust.npy"),
-                     np_.array(data["trust"]))
-            np_.save(os.path.join(curves_dir, f"{run_key}__loss.npy"),
-                     np_.array(data["loss"]))
-
+    
     # ── Print summary pivot table ─────────────────────────────────────────────
     df = pd.read_csv(checkpoint_path)
     print("\n--- SUCCESS RATE TABLE (mean across seeds) ---")
